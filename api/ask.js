@@ -26,7 +26,6 @@ module.exports = async (req, res) => {
     let completed = false;
     let responseText = "Nu am primit un răspuns de la asistent.";
 
-    // Așteaptă până când run-ul este complet
     while (!completed) {
       const runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id);
 
