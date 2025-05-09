@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asistent AI</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+    #chat { display: none; border: 1px solid #ccc; padding: 10px; margin-top: 10px; height: 400px; overflow-y: auto; }
+    #inputBox { display: flex; margin-top: 10px; }
+    input[type="text"] { flex: 1; padding: 10px; font-size: 1em; }
+    button { padding: 10px; font-size: 1em; }
+  </style>
+</head>
+<body>
+  <h2>Asistentul tău AI</h2>
+  <p>Scrie ce vrei să faci și apasă Enter:</p>
+  <div id="inputBox">
+    <input id="prompt" type="text" placeholder="Ex: Vreau un tool AI pentru scris texte...">
+    <button onclick="send()">➤</button>
+  </div>
+  <div id="chat"></div>
+
+  <script>
+    let chatDiv = document.getElementById('chat');
+    let promptInput = document.getElementById('prompt');
+
+    async function send() {
+      const prompt = promptInput.value.trim();
+      if (!prompt) return;
+
+      if (chatDiv.style.display === 'none') chatDiv.style.display = 'block';
+      chatDiv.innerHTML += `<div><b>Tu:</b> ${prompt}</div>`;
+
+      promptInput.value = '';
+      const response = await fetch('/api/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: prompt })
+      });
+      const data = await response.json();
+      chatDiv.innerHTML += `<div><b>AI:</b> ${data.reply}</div>`;
+      chatDiv.scrollTop = chatDiv.scrollHeight;
+    }
+  </script>
+</body>
+</html>
