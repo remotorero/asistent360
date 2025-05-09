@@ -1,3 +1,4 @@
+
 const { OpenAI } = require("openai");
 
 const openai = new OpenAI({
@@ -13,14 +14,13 @@ module.exports = async (req, res) => {
 
   try {
     const thread = await openai.beta.threads.create();
+    const run = await openai.beta.threads.runs.create(thread.id, {
+      assistant_id: "asst_Ad3sjvxGa87WX0rTnJn1nPlF",
+    });
 
     await openai.beta.threads.messages.create(thread.id, {
       role: "user",
       content: message,
-    });
-
-    const run = await openai.beta.threads.runs.create(thread.id, {
-      assistant_id: "asst_Ad3sjvxGa87WX0rTnJn1nPlF",
     });
 
     let completed = false;
@@ -28,7 +28,6 @@ module.exports = async (req, res) => {
 
     while (!completed) {
       const runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id);
-
       if (runStatus.status === "completed") {
         completed = true;
         const messages = await openai.beta.threads.messages.list(thread.id);
@@ -37,7 +36,6 @@ module.exports = async (req, res) => {
       } else if (runStatus.status === "failed") {
         throw new Error("Asistentul a eșuat.");
       }
-
       await new Promise((r) => setTimeout(r, 1000));
     }
 
