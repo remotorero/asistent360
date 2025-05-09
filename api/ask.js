@@ -1,4 +1,3 @@
-
 const { OpenAI } = require("openai");
 
 const openai = new OpenAI({
@@ -14,13 +13,14 @@ module.exports = async (req, res) => {
 
   try {
     const thread = await openai.beta.threads.create();
-    const run = await openai.beta.threads.runs.create(thread.id, {
-      assistant_id: "asst_Ad3sjvxGa87WX0rTnJn1nPlF",
-    });
 
     await openai.beta.threads.messages.create(thread.id, {
       role: "user",
       content: message,
+    });
+
+    const run = await openai.beta.threads.runs.create(thread.id, {
+      assistant_id: "asst_Ad3sjvxGa87WX0rTnJn1nPlF",
     });
 
     let completed = false;

@@ -1,9 +1,7 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ro">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Asistent AI</title>
   <style>
     body { font-family: sans-serif; padding: 20px; max-width: 600px; margin: auto; }
@@ -17,7 +15,7 @@
   <h2>Asistentul tău AI</h2>
   <p>Scrie ce vrei să faci și apasă Enter:</p>
   <div id="inputBox">
-    <input id="prompt" type="text" placeholder="Ex: Vreau un tool AI pentru scris texte...proba">
+    <input id="prompt" type="text" placeholder="Ex: Recomandă un AI pentru creare video...">
     <button onclick="send()">➤</button>
   </div>
   <div id="chat"></div>
@@ -34,17 +32,14 @@
       chatDiv.innerHTML += `<div><b>Tu:</b> ${prompt}</div>`;
 
       promptInput.value = '';
-      try {
-        const response = await fetch('/api/ask', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: prompt })
-        });
-        const data = await response.json();
-        chatDiv.innerHTML += `<div><b>AI:</b> ${data.reply}</div>`;
-      } catch (err) {
-        chatDiv.innerHTML += `<div><b>Eroare:</b> ${err.message}</div>`;
-      }
+      const response = await fetch('/api/ask', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: prompt })
+      });
+
+      const data = await response.json();
+      chatDiv.innerHTML += `<div><b>AI:</b> ${data.reply}</div>`;
       chatDiv.scrollTop = chatDiv.scrollHeight;
     }
   </script>
